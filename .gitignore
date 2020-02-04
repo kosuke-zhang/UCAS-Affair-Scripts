@@ -2,6 +2,7 @@
 nohup.out
 data/
 sep.cookie
+verification.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
