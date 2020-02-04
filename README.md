@@ -119,7 +119,7 @@ Fill the `7351` in terminal and press enter.
 
 ## TodoList
 
-- [ ] Testing and adapting to more python versions
+- [ ] Test and adapt to more python versions
 - [ ] Shuttle Bus Reservation
 - [ ] Build Docker Image
 - [ ] Automatic Identification Verification Code
