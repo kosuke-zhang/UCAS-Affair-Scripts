@@ -7,11 +7,13 @@
 # @Time    : 2020/2/4
 
 
+import time
 from http import cookiejar
 
 import requests
 from bs4 import BeautifulSoup
 
+from settings import MONITOR_GRADES_DELAY
 from take_courses import identification
 from utils import logger, send_email, email_set
 
@@ -49,3 +51,4 @@ if __name__ == '__main__':
     while True:
         grades = query_grades(session)
         grades_num = monitor(grades, grades_num)
+        time.sleep(MONITOR_GRADES_DELAY)

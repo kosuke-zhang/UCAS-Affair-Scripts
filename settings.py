@@ -14,8 +14,11 @@ COURSES = []
 # COLLEGES = ['人工智能学院', '心理学系']
 COLLEGES = []
 
-# 发送选课请求的时间间隔
+# 选课请求时间间隔、秒
 TAKE_COURSES_DELAY = 0.1
+
+# 监听成绩时间间隔、秒
+MONITOR_GRADE = 60
 
 # 监听成绩的时间间隔
 MONITOR_GRADES_DELAY = 100
@@ -23,7 +26,6 @@ MONITOR_GRADES_DELAY = 100
 # http://sep.ucas.ac.cn/ 教务的账号和密码
 USERNAME = ''
 PASSWORD = ''
-
 
 # SMTP 的账号和授权码，已经接收邮件的邮箱
 SEND_EMAIL = ''
