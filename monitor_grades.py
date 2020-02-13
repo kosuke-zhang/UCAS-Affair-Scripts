@@ -13,9 +13,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from take_courses import identification
-from utils import logger, send_email
-
-from settings import RECEIVE_EMAIL
+from utils import logger, send_email, email_set
 
 
 def query_grades(session):
@@ -35,11 +33,14 @@ def monitor(grades, grades_num):
                 continue
             score_content += '{0}：{1}\n\n'.format(score[0].text, score[2].text)
         logger.info(score_content)
-        send_email(score_content, RECEIVE_EMAIL)
+        send_email(score_content)
     return grades_num
 
 
 if __name__ == '__main__':
+    if not email_set():
+        raise Exception('Please first set email info in settings.py')
+
     session = requests.session()
     session.cookies = cookiejar.LWPCookieJar()
     session.cookies.load('sep.cookie')
