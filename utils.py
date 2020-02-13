@@ -8,11 +8,12 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
 
-from settings import SEND_EMAIL, SEND_EMAIL_PWD
+from settings import SEND_EMAIL, SEND_EMAIL_PWD, RECEIVE_EMAIL
 
-logger = logging.getLogger(__name__)  # 不加名称设置root logger
+logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s: - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+formatter = logging.Formatter('%(asctime)s - %(filename)s - %(lineno)d: - %(levelname)s: - %(message)s',
+                              datefmt='%Y-%m-%d %H:%M:%S')
 
 # 使用 FileHandler 输出到文件
 # fh = logging.FileHandler('take-courses.txt', mode='w')
@@ -29,8 +30,16 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-def send_email(str, email_receiver, file_path=None):
-    ret = True
+def email_set():
+    if SEND_EMAIL and SEND_EMAIL_PWD and RECEIVE_EMAIL:
+        return True
+    return False
+
+
+def send_email(str, file_path=None):
+    if not email_set():
+        return False
+
     try:
         msg = MIMEMultipart()
         part = MIMEText(str, 'plain', 'utf-8')
@@ -42,13 +51,13 @@ def send_email(str, email_receiver, file_path=None):
             msg.attach(part)
 
         msg['From'] = formataddr((SEND_EMAIL, SEND_EMAIL))  # 括号里的对应发件人邮箱昵称、发件人邮箱账号
-        msg['To'] = formataddr((email_receiver, email_receiver))  # 括号里的对应收件人邮箱昵称、收件人邮箱账号
-        msg['Subject'] = "成绩"  # 邮件的主题，也可以说是标题
+        msg['To'] = formataddr((RECEIVE_EMAIL, RECEIVE_EMAIL))  # 括号里的对应收件人邮箱昵称、收件人邮箱账号
+        msg['Subject'] = "UCAS-Affair-Scripts notification"  # 邮件的主题，也可以说是标题
 
         server = smtplib.SMTP_SSL("smtp.qq.com", 465)  # 发件人邮箱中的SMTP服务器
         server.login(SEND_EMAIL, SEND_EMAIL_PWD)  # 括号中对应的是发件人邮箱账号、邮箱密码
-        server.sendmail(SEND_EMAIL, [email_receiver, ], msg.as_string())  # 括号中对应的是发件人邮箱账号、收件人邮箱账号、发送邮件
+        server.sendmail(SEND_EMAIL, [RECEIVE_EMAIL, ], msg.as_string())  # 括号中对应的是发件人邮箱账号、收件人邮箱账号、发送邮件
         server.quit()
+        return True
     except Exception:
-        ret = False
-    return ret
+        return False

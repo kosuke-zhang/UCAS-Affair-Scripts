@@ -14,7 +14,7 @@ import requests
 from bs4 import BeautifulSoup
 
 import settings
-from utils import logger
+from utils import logger, send_email
 
 
 def identification(session):
@@ -88,6 +88,7 @@ def take_courses(session, colleges, courses):
                     sids.remove(value)
                     sucess_info = sucess.string
                     logger.info(sucess_info)
+                    send_email(sucess_info)
 
                 if error is not None and error.string is not None:
                     error_info = error.string
@@ -107,7 +108,8 @@ def take_courses(session, colleges, courses):
 
             if len(sids) == 0:
                 logger.info('done')
-                break
+                send_email('done')
+                exit(0)
 
         except Exception as e:
             logger.error(e.args[0])
