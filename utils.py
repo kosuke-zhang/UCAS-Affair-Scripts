@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import re
 import smtplib
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
@@ -61,3 +62,16 @@ def send_email(str, file_path=None):
         return True
     except Exception:
         return False
+
+
+def identification(session):
+    logger.info('选课系统会话失效，正在重新认证。（如果您需要使用网页端，请先暂停此脚本，否则此脚本会不断抢夺选课系统的认证）')
+    p_course_manage = re.compile('(http:\/\/jwxk\.ucas\.ac\.cn\/login\?Identity=.*?&roleId=821)')
+
+    resp = session.get('http://sep.ucas.ac.cn/portal/site/226/821')
+    url_course_manage = p_course_manage.search(resp.text).groups()[0]
+
+    session.get(url_course_manage)
+    session.cookies.save('sep.cookie')
+
+    return session

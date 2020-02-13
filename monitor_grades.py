@@ -14,8 +14,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from settings import MONITOR_GRADES_DELAY
-from take_courses import identification
-from utils import logger, send_email, email_set
+from utils import logger, send_email, email_set, identification
 
 
 def query_grades(session):
